@@ -3,6 +3,7 @@ let resetBtn = document.querySelector("#reset-btn");
 let newGameBtn = document.querySelector("#new-btn");
 let msgContainer = document.querySelector(".msg-container");
 let msg = document.querySelector("#msg");
+let count = 0;
 
 let turn0 = true;
 
@@ -19,35 +20,36 @@ const winPatterns = [
 
 boxes.forEach((box) => {
   box.addEventListener("click", () => {
-    
     if (turn0 == true) {
       box.innerText = "O";
       turn0 = false;
     } else {
       box.innerText = "X";
       turn0 = true;
+      box.classList.add("X-class");
     }
+
     box.disabled = true;
+    count++;
 
     checkWinner();
+    checkdraw();
   });
 });
-const diasableBoxes = () => {
-  for (let box of boxes) {
-    box.disabled = true;
-  }
-};
-const enableBoxes = () => {
-  for (let box of boxes) {
-    box.disabled = false;
-    box.innerText = "";
-  }
-};
+
 const showWinner = (winner) => {
   msg.innerText = `congratulation, Winner is ${winner}`;
   msgContainer.classList.remove("hide");
 
   diasableBoxes();
+};
+
+const checkdraw = () => {
+  if (count === 9) {
+    msg.innerText = "draw, Try again";
+    diasableBoxes();
+    msgContainer.classList.remove("hide");
+  }
 };
 
 const checkWinner = () => {
@@ -58,8 +60,6 @@ const checkWinner = () => {
 
     if (pos1 != "" && pos2 != "" && pos3 != "") {
       if (pos1 === pos2 && pos2 === pos3) {
-        
-
         showWinner(pos1);
       }
     }
@@ -71,6 +71,18 @@ const resetGame = () => {
   enableBoxes();
   msgContainer.classList.add("hide");
 };
+const enableBoxes = () => {
+  for (let box of boxes) {
+    box.disabled = false;
+    box.innerText = "";
+  }
+  count = 0;
+};
+const diasableBoxes = () => {
+  for (let box of boxes) {
+    box.disabled = true;
+  }
+};
 
-newGameBtn.addEventListener("click",resetGame);
-resetBtn.addEventListener("click",resetGame);
+newGameBtn.addEventListener("click", resetGame);
+resetBtn.addEventListener("click", resetGame);
